@@ -3,7 +3,19 @@ const mongoose = require('mongoose');
 
 const app = express();
 app.use(express.json());
+const mongoose = require('mongoose');
 
+// Cleaning Booking Schema
+const bookingSchema = new mongoose.Schema({
+  customerName: { type: String, required: true },
+  serviceType: { type: String, required: true }, // e.g., "Deep Clean", "Standard Clean"
+  appointmentDate: { type: Date, required: true },
+  address: { type: String, required: true },
+  status: { type: String, default: 'Pending' },
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Booking = mongoose.model('Booking', bookingSchema);
 // 1. Connect to MongoDB Atlas
 const MONGO_URI = process.env.MONGO_URI || 'YOUR_MONGODB_CONNECTION_STRING_HERE';
 
@@ -81,11 +93,35 @@ app.post('/stk/push', async (req, res) => {
 });
 
 // 3. Start the Server at the very bottom
+// 3. CREATE a new cleaning booking (POST)
+app.post('/api/bookings', async (req, res) => {
+  try {
+    const { customerName, serviceType, appointmentDate, address } = req.body;
+    
+    const newBooking = new Booking({
+      customerName,
+      serviceType,
+      appointmentDate,
+      address
+    });
+
+    const savedBooking = await newBooking.save();
+    res.status(201).json({ message: 'Booking created successfully!', booking: savedBooking });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create booking', details: err.message });
+  }
+});
+
+// 4. GET all bookings (GET)
+app.get('/api/bookings', async (req, res) => {
+  try {
+    const bookings = await Booking.find().sort({ appointmentDate: 1 });
+    res.status(200).json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch bookings', details: err.message });
+  }
+});
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Flow Pay server running on port ${PORT}`);
-});
-
-app.listen(3000, () => {
-  console.log('Flow Pay server running on port 3000');
 });
