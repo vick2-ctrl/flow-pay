@@ -1,6 +1,9 @@
 const express = require('express');
-const mongoose = require('mongoose'); // <--- Make sure this is here!
+const cors = require('cors'); // <--- Add this line
+const mongoose = require('mongoose');
+
 const app = express();
+app.use(cors()); // <--- Add this line right below app = express()
 app.use(express.json());
 
 // Cleaning Booking Schema
