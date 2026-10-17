@@ -1,5 +1,5 @@
 const express = require('express');
-
+const mongoose = require('mongoose'); // <--- Make sure this is here!
 const app = express();
 app.use(express.json());
 
