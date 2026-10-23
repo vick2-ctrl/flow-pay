@@ -92,7 +92,26 @@ app.post('/stk/push', async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+app.post('/api/mpesa/callback', async (req, res) => {
+    try {
+        const callbackData = req.body.Body.stkCallback; // Fixed casing: Body
+        const resultCode = callbackData.ResultCode; // 0 means success
 
+        if (resultCode === 0) {
+            const metadataItems = callbackData.CallbackMetadata.Item; // Fixed casing: CallbackMetadata
+            const mpesaReceiptNumber = metadataItems.find(item => item.Name === 'MpesaReceiptNumber')?.Value;
+            
+            console.log(`Payment success! Receipt: ${mpesaReceiptNumber}`); // Fixed: Used backticks instead of single quotes
+        } else {
+            console.log(`Payment failed or cancelled: ${callbackData.ResultDesc}`); // Fixed: Used backticks instead of single quotes
+        }
+
+        res.status(200).json({ ResultCode: 0, ResultDesc: "success" });
+    } catch (error) {
+        console.error('Error handling callback:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 // 3. Start the Server at the very bottom
 // 3. CREATE a new cleaning booking (POST)
 app.post('/api/bookings', async (req, res) => {
