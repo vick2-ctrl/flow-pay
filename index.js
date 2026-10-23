@@ -33,8 +33,8 @@ app.post('/stk/push', async (req, res) => {
   try {
     const { phone, amount } = req.body;
     
-    const consumerKey = 'VDZSKY08g91qVGtAqBIO1naXzJsqfMe0GqY4ypWlJF8nGmAT';
-    const consumerSecret = 'JTtgBwyA6IOyqSovK65bQwGcfqg2eVmfdfLancaKn6IOf2xU0G6gCzsMJilSydUo';
+    const consumerKey = 'USyJeVlXbBpfgyWxbZp7pA4GrouXulMgThYtjX2asFaA89Nc';
+    const consumerSecret = 'BdSEN8dVrhLftDEOjMrvQvzElB9TXksFulUeORwWJfIUkOGGHgqVNJdbGXjZDTQA';
     const shortCode = '174379';
     const passkey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
 
